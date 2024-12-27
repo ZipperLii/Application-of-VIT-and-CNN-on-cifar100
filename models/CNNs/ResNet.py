@@ -2,5 +2,6 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 
-def ResVGG(nn.Module):
+class ResVGG(nn.Module):
+    pass
     

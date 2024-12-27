@@ -1,8 +1,8 @@
 import torch
 import torchvision
 import torch.nn as nn
-from ImageNet import AlexNet
-from ImageNet import VGG
+from models.CNNs.ResNet import ResVGG
+from models.VITs.VIT import VisionTransformer
 from torch.utils import data
 from torchvision import transforms
 from d2l import torch as d2l
@@ -100,14 +100,14 @@ def main(train = None):
             transforms.ToTensor(),
             transforms.Resize((224, 224))
         ])
-        train_dataset = torchvision.datasets.CIFAR10(
-            "./DeepLearning/CV/data",
+        train_dataset = torchvision.datasets.CIFAR100(
+            "./data",
             True,
             trans,
             download=True
         )
-        test_dataset = torchvision.datasets.CIFAR10(
-            "./DeepLearning/CV/data",
+        test_dataset = torchvision.datasets.CIFAR100(
+            "./data",
             False,
             trans,
             download=True
@@ -119,7 +119,7 @@ def main(train = None):
 
         # VGG16 arichitecture: 2+2+3+3+3 = 13(conv) , 13 + 3(fc) = 16
         architecture = ((2,64), (2,128), (3,256), (3,512), (3,512))
-        model = VGG(architecture, 10)
+        model = ResVGG(architecture, 10)
         num_epochs = 5
         train_model(net=model,
                 train_iter=train_iter,
@@ -129,7 +129,7 @@ def main(train = None):
                 device=try_gpu())
         # save model weights
         model_weights = 'VGG16-CIFAR10-epoch20'
-        PATH = f'./DeepLearning/CV/checkpoints/CIFAR-10/{model_weights}.pth'
+        PATH = f'./checkpoints/CIFAR-100/{model_weights}.pth'
         save_model(model, PATH)
 
     else:
@@ -139,7 +139,7 @@ def main(train = None):
         ])
 
         test_dataset = torchvision.datasets.CIFAR10(
-            "./DeepLearning/CV/data",
+            "./data",
             False,
             trans,
             download=True
@@ -148,9 +148,9 @@ def main(train = None):
         batch_size = 64
         test_iter = data.DataLoader(test_dataset, batch_size, shuffle=True)
 
-        MODEL_PATH = './DeepLearning/CV/checkpoints/CIFAR-10/VGG16-CIFAR10-epoch20.pth'
+        MODEL_PATH = './checkpoints/CIFAR-10/VGG16-CIFAR10-epoch20.pth'
         architecture = ((2,64), (2,128), (3,256), (3,512), (3,512))
-        test_model = VGG(architecture, 10)
+        test_model = ResVGG(architecture, 10)
         test_model.load_state_dict(torch.load(MODEL_PATH))
         test_acc = evaluate_accuracy_gpu(test_model, test_iter)
         print(test_acc)
