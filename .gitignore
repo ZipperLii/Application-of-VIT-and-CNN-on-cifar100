@@ -1,0 +1,10 @@
+*.pth
+*.h5
+checkpoints
+checkpoint
+__pycache__/
+*.pyc
+log
+*.log
+.vscode/
+.idea/

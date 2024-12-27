@@ -1,1 +1,1 @@
-# Performance-of-VIT-and-CNN-on-Cifar-100-Clasification
+# Performance of VIT and CNN on Cifar-100 Clasification
