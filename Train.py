@@ -2,11 +2,12 @@ import torch
 import torchvision
 import torch.nn as nn
 from models.CNNs.ResNet import ResVGG
-from models.VITs.VIT import VisionTransformer
+from models.VITs.ViT_B16 import VisionTransformer
 from torch.utils import data
 from torchvision import transforms
 from d2l import torch as d2l
 from tqdm import tqdm
+from models.VITs.ViT_config import ViT_Config
 
 def try_gpu(i=0):
     if torch.cuda.device_count() >= i + 1:
@@ -32,7 +33,7 @@ def evaluate_accuracy_gpu(net, data_iter, device=None):
             else:
                 X = X.to(device)
             y = y.to(device)
-            metric.add(d2l.accuracy(net(X), y), y.numel())
+            metric.add(d2l.accuracy(net(X)[0], y), y.numel())
     return metric[0] / metric[1]
 
 def save_model(net, path):
@@ -67,7 +68,7 @@ def train_model(net, train_iter, test_iter, num_epochs, lr, device, plot=False):
                 timer.start()
                 optimizer.zero_grad()
                 X, y = X.to(device), y.to(device)
-                y_hat = net(X)
+                y_hat = net(X)[0]
                 l = loss(y_hat, y)
                 l.backward()
                 optimizer.step()
@@ -94,66 +95,47 @@ def train_model(net, train_iter, test_iter, num_epochs, lr, device, plot=False):
     print(f'{metric[2] * num_epochs / timer.sum():.1f} examples/sec '
           f'on {str(device)}')
 
-def main(train = None):
-    if train == 'Train':
-        trans = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Resize((224, 224))
-        ])
-        train_dataset = torchvision.datasets.CIFAR100(
-            "./data",
-            True,
-            trans,
-            download=True
-        )
-        test_dataset = torchvision.datasets.CIFAR100(
-            "./data",
-            False,
-            trans,
-            download=True
-        )
+def main():
+    trans = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Resize((224, 224)),
+        transforms.RandomResizedCrop(224,scale=(0.64,1.0),ratio=(1.0,1.0)),
+        transforms.RandomHorizontalFlip(),
+        transforms.Normalize(0.5, 0.5)
+    ])
+    train_dataset = torchvision.datasets.CIFAR10(
+        "./DeepLearning/Application-of-VIT-and-CNN-on-cifar100/data",
+        True,
+        trans,
+        download=True
+    )
+    test_dataset = torchvision.datasets.CIFAR10(
+        "./DeepLearning/Application-of-VIT-and-CNN-on-cifar100/data",
+        False,
+        trans,
+        download=True
+    )
 
-        batch_size = 64
-        train_iter = data.DataLoader(train_dataset, batch_size, shuffle=True)
-        test_iter = data.DataLoader(test_dataset, batch_size, shuffle=True)
+    batch_size = 64
+    train_iter = data.DataLoader(train_dataset, batch_size, shuffle=True)
+    test_iter = data.DataLoader(test_dataset, batch_size, shuffle=True)
 
-        # VGG16 arichitecture: 2+2+3+3+3 = 13(conv) , 13 + 3(fc) = 16
-        architecture = ((2,64), (2,128), (3,256), (3,512), (3,512))
-        model = ResVGG(architecture, 10)
-        num_epochs = 5
-        train_model(net=model,
-                train_iter=train_iter,
-                test_iter=test_iter,
-                num_epochs=num_epochs,
-                lr=0.01,
-                device=try_gpu())
-        # save model weights
-        model_weights = 'VGG16-CIFAR10-epoch20'
-        PATH = f'./checkpoints/CIFAR-100/{model_weights}.pth'
-        save_model(model, PATH)
+    config = ViT_Config()
+    model = VisionTransformer(config)
 
-    else:
-        trans = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Resize((224, 224))
-        ])
+    num_epochs = 30
 
-        test_dataset = torchvision.datasets.CIFAR10(
-            "./data",
-            False,
-            trans,
-            download=True
-        )
-
-        batch_size = 64
-        test_iter = data.DataLoader(test_dataset, batch_size, shuffle=True)
-
-        MODEL_PATH = './checkpoints/CIFAR-10/VGG16-CIFAR10-epoch20.pth'
-        architecture = ((2,64), (2,128), (3,256), (3,512), (3,512))
-        test_model = ResVGG(architecture, 10)
-        test_model.load_state_dict(torch.load(MODEL_PATH))
-        test_acc = evaluate_accuracy_gpu(test_model, test_iter)
-        print(test_acc)
+    train_model(net=model,
+            train_iter=train_iter,
+            test_iter=test_iter,
+            num_epochs=num_epochs,
+            lr=0.01,
+            device=try_gpu())
+    # save model weights
+    model_weights = 'ViT-b16-CIFAR10-Epoch10'
+    datasets_name = 'CIFAR-10'
+    PATH = f'./DeepLearning/Application-of-VIT-and-CNN-on-cifar100/checkpoints/{datasets_name}/{model_weights}.pth'
+    save_model(model, PATH)
 
 if __name__ == '__main__':
     main()
