@@ -192,5 +192,3 @@ class VisionTransformer(nn.Module):
         logits = self.mlp_head(features[:, 0])
         
         return logits, attn_weights
-
-
