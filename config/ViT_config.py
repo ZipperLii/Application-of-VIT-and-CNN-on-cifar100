@@ -5,7 +5,7 @@ def ViT_Config():
     config.patch = ml_collections.ConfigDict({'size': (16, 16)})
     config.input_size = (3, 224, 224)
     config.hidden_size = 768
-    config.num_classes = 10
+    config.num_classes = 100
     config.transformer = ml_collections.ConfigDict()
     config.transformer.mlp_dim = 3072
     config.transformer.head_num = 12
