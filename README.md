@@ -43,7 +43,6 @@ It seems  hard to train on CIFAR dataset from the ground up. The structure of Vi
 The model is pre-trained on ImageNet-21k dataset which contains bigger amounts of images with more classes. So, there are more features learnt in pre-training process. 
 
 In this task, we deploy ViT-B/16 locally and load [pre-trained weights](https://storage.googleapis.com/vit_models/imagenet21k/ViT-B_16.npz) to address the training problem.
-<img src="images/example.png" alt="Example Image" width="400">
 
 ```python
 !wget https://storage.googleapis.com/vit_models/imagenet21k/ViT-B_16.npz 
@@ -77,7 +76,7 @@ In this task, we deploy ViT-B/16 locally and load [pre-trained weights](https://
 
 - It shows that the pre-trained model already have the capacity of capturing quantitative features even though we just rectified the output head
 
-![fig.2](https://github.com/ZipperLii/Fine-tuning-of-ViT-B16-on-CIFAR-10-and-CIFAR-100/blob/main/img/Fine-tuned-head-epoch50.jpg)
+<img title="" src="img/Fine-tuned-head-epoch50.jpg" alt="fig.2][Fine-tuning-of-ViT-B16-on-CIFAR-10-and-CIFAR-100/img/Fine-tuned-head-epoch50.jpg at main · ZipperLii/Fine-tuning-of-ViT-B16-on-CIFAR-10-and-CIFAR-100 · GitHub" width="452" data-align="center">
 
 #### 2. Layer fine-tuning (unfreeze mlp layers and mlp_head)
 
