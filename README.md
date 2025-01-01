@@ -76,7 +76,7 @@ In this task, we deploy ViT-B/16 locally and load [pre-trained weights](https://
 
 - It shows that the pre-trained model already have the capacity of capturing quantitative features even though we just rectified the output head
 
-![fig.2][Fine-tuning-of-ViT-B16-on-CIFAR-10-and-CIFAR-100/img/Fine-tuned-head-epoch50.jpg at main · ZipperLii/Fine-tuning-of-ViT-B16-on-CIFAR-10-and-CIFAR-100 · GitHub](https://github.com/ZipperLii/Fine-tuning-of-ViT-B16-on-CIFAR-10-and-CIFAR-100/blob/main/img/Fine-tuned-head-epoch50.jpg)
+![fig.2](https://github.com/ZipperLii/Fine-tuning-of-ViT-B16-on-CIFAR-10-and-CIFAR-100/blob/main/img/Fine-tuned-head-epoch50.jpg)
 
 #### 2. Layer fine-tuning (unfreeze mlp layers and mlp_head)
 
