@@ -257,7 +257,7 @@ class VisionTransformer(nn.Module):
     def load_weights(self, weights):
         with torch.no_grad():
             if not self.load_head:
-                nn.init.zeros_(self.mlp_head.weight)
+                nn.init.xavier_uniform_(self.mlp_head.weight)
                 nn.init.zeros_(self.mlp_head.bias)
             else:
                 self.mlp_head.weight.copy_(np2th(weights["head/kernel"]).t())

@@ -9,7 +9,7 @@ def try_gpu(i=0):
     return torch.device('cpu')
 
 def get_optimizer(net, lr):
-    optimizer = torch.optim.SGD(net.parameters(), lr=lr, momentum=0.9)
+    optimizer = torch.optim.Adam(net.parameters(), lr=lr, weight_decay=0.0001)
     return optimizer
 
 def cal_correct_num(y_hat, y):
@@ -54,11 +54,14 @@ def plot_curves(epoch_train_loss, epoch_train_acc, epoch_test_acc, path='./img/F
     fig, ax1 = plt.subplots(figsize=(10, 6))
 
     ax1.plot(batch_indices, epoch_train_loss, label="Train Loss", color="#8A2BE2", marker="")
-    ax1.set_xlabel("Epoch", fontsize=14)
+    # ax1.set_xlabel("Epoch", fontsize=14)
     ax1.set_ylabel("Loss", color="black", fontsize=13)
     ax1.tick_params(axis="y", labelcolor="black", labelsize=12)
-    ax1.set_xticks(range(num_epochs + 1))
-
+    if num_epochs > 20:
+        ax1.set_xticks(range(0, num_epochs + 1, num_epochs//20))
+    else:
+        ax1.set_xticks(range(0, num_epochs + 1))
+    
     ax2 = ax1.twinx()
     ax2.plot(batch_indices, epoch_train_acc, label="Train Accuracy", color="#6495ED", marker="")
     ax2.plot(epoch_indices, epoch_test_acc, label="Test Accuracy", color="#FF4500", marker="")
