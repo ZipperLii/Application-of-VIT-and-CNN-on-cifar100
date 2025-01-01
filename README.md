@@ -74,9 +74,9 @@ In this task, we deploy ViT-B/16 locally and load [pre-trained weights](https://
 
 - According to the following plot, if we fine-tune by just unfreezing the mlp_head, the model converges with 0.7726 test accuracy.
 
-- It shows that the pre-trained model already have the capacity of capturing quantitative features even though we just rectified the output head.
+- It shows that the pre-trained model already have the capacity of capturing quantitative features even though we just rectified the output head
 
-<img title="" src="file:///F:/Works/GitHub%20Project/ViT-B16-on-CIFAR100/img/Fine-tuned-head-epoch50.jpg" alt="" width="485" data-align="center">
+![fig.2][Fine-tuning-of-ViT-B16-on-CIFAR-10-and-CIFAR-100/img/Fine-tuned-head-epoch50.jpg at main · ZipperLii/Fine-tuning-of-ViT-B16-on-CIFAR-10-and-CIFAR-100 · GitHub](https://github.com/ZipperLii/Fine-tuning-of-ViT-B16-on-CIFAR-10-and-CIFAR-100/blob/main/img/Fine-tuned-head-epoch50.jpg)
 
 #### 2. Layer fine-tuning (unfreeze mlp layers and mlp_head)
 
@@ -87,8 +87,6 @@ In this task, we deploy ViT-B/16 locally and load [pre-trained weights](https://
 - Optimizer: SGD(Momentun=0.9, weight_decay=0.0001)
 
 - lr: 5e-2(cosine decay)
-
-
 
 ### Download model weights
 
