@@ -43,6 +43,7 @@ It seems  hard to train on CIFAR dataset from the ground up. The structure of Vi
 The model is pre-trained on ImageNet-21k dataset which contains bigger amounts of images with more classes. So, there are more features learnt in pre-training process. 
 
 In this task, we deploy ViT-B/16 locally and load [pre-trained weights](https://storage.googleapis.com/vit_models/imagenet21k/ViT-B_16.npz) to address the training problem.
+<img src="images/example.png" alt="Example Image" width="400">
 
 ```python
 !wget https://storage.googleapis.com/vit_models/imagenet21k/ViT-B_16.npz 
