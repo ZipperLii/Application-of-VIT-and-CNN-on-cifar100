@@ -57,8 +57,17 @@ def main():
     # freeze parameters
     for param in model.parameters():
         param.requires_grad = False
+    
+    # unfreeze head and mlp layers in encoder
     model.mlp_head.weight.requires_grad = True
     model.mlp_head.bias.requires_grad = True
+    for i, layer in enumerate(model.feature_layer.encoder_layer):
+        layer.mlp_norm.weight.requires_grad = True
+        layer.mlp_norm.bias.requires_grad = True
+        layer.mlp.fc1.weight.requires_grad = True
+        layer.mlp.fc1.bias.requires_grad = True
+        layer.mlp.fc2.weight.requires_grad = True
+        layer.mlp.fc2.bias.requires_grad = True
     
     num_epochs = 100
     
@@ -72,11 +81,10 @@ def main():
             plot=True)
     
     # save model weights
-    model_weights = 'ViT-b16-CIFAR100-Epoch100-Finetuned'
+    model_weights = 'ViT-b16-CIFAR100-Epoch100-Finetuned-mlp'
     datasets_name = 'CIFAR-100'
     PATH = f'./checkpoints/{datasets_name}/{model_weights}.pth'
     save_model(model, PATH)
-    
     
 if __name__ == '__main__':
     main()

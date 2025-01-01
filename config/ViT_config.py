@@ -12,8 +12,8 @@ def ViT_Config():
     config.transformer.num_key_value_head = 12
     config.transformer.layer_num = 12
     config.transformer.qkv_bias = True
-    config.transformer.attention_dropout = 0.2
-    config.transformer.dropout = 0.35
+    config.transformer.attention_dropout = 0.0
+    config.transformer.dropout = 0.1
     return config
 
 def ViT_Config_Pretrained():

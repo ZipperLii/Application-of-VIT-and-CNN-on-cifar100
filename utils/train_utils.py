@@ -9,8 +9,9 @@ def try_gpu(i=0):
     return torch.device('cpu')
 
 def get_optimizer(net, lr):
-    optimizer = torch.optim.Adam(net.parameters(), lr=lr, weight_decay=0.0001)
-    return optimizer
+    optimizer = torch.optim.SGD(net.parameters(), lr=lr, momentum=0.9 ,weight_decay=0.0001)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, 100)
+    return optimizer, scheduler
 
 def cal_correct_num(y_hat, y):
     if len(y_hat.shape) > 1 and y_hat.shape[1] > 1:
@@ -82,7 +83,7 @@ def train_model(net, train_iter, test_iter, num_epochs, lr, device, test=False, 
     print('Training on', device)
     net.to(device)
     # optimizer
-    optimizer = get_optimizer(net, lr)
+    optimizer, scheduler = get_optimizer(net, lr)
     # criterion
     loss = nn.CrossEntropyLoss()
     if plot == True:
@@ -114,6 +115,7 @@ def train_model(net, train_iter, test_iter, num_epochs, lr, device, test=False, 
                 pbar.set_postfix({"Loss": train_l, "Accuracy": train_acc})
                 pbar.update(1)
 
+        scheduler.step()
         if test == True:
             test_acc = cal_accuracy_gpu(net, test_iter)
             print(f"Epoch {epoch + 1}/{num_epochs} -> Train Accuracy: {train_acc:.4f}, Train Loss: {train_l:.4f}, Test Accuracy: {test_acc:.4f}")

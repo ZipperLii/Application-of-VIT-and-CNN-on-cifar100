@@ -36,7 +36,7 @@ I have tried to train ViT-B16 on CIFAR-10 from the ground up, but the performanc
 - 50 epochs with SGD(Momentum=0.9) → 0.6327 acc on test set
 - 60 epoch with Adam(L2-Regularization) → overfitting occurring after 20 epoch
 
-It seems  hard to train on CIFAR dataset from the ground up. The structure of ViT is more complex than other effective CNNs. It is easier for ViT to be overfitted on datasets of small scale, which verified the outcomes of [arxiv.2010.119290](https://arxiv.org/pdf/2010.11929).
+It seems  hard to train on CIFAR dataset from the ground up. The structure of ViT is more complex than other effective CNNs. It is easier for ViT to be overfitted on datasets of small scale, which verified the outcomes of [2010.119290(arxiv)](https://arxiv.org/pdf/2010.11929).
 
 ### Pre-trained Model
 
@@ -62,25 +62,33 @@ In this task, we deploy ViT-B/16 locally and load [pre-trained weights](https://
 
 - **Freezing all parameters except output layer** (MLP_head)
 
-- 50 Epoch with 256 batch_size
+- 50 Epochs with 256 batch_size
 
-- Optimizer: SGD(weight_decay=0.0001)
+- Optimizer: SGD(Momentun=0.9, weight_decay=0.0001)
 
-- Cosine decay learning rate
+- lr: 1e-2(cosine decay)
 
-##### Result
+##### Result＆Analysis
 
+- Test Accuracy = 0.7726
 
+- According to the following plot, if we fine-tune by just unfreezing the mlp_head, the model converges with 0.7726 test accuracy.
 
-##### 2. Layer fine-tuning (unfreeze mlp layers and mlp_head)
+- It shows that the pre-trained model already have the capacity of capturing quantitative features even though we just rectified the output head.
+
+<img title="" src="file:///F:/Works/GitHub%20Project/ViT-B16-on-CIFAR100/img/Fine-tuned-head-epoch50.jpg" alt="" width="485" data-align="center">
+
+#### 2. Layer fine-tuning (unfreeze mlp layers and mlp_head)
 
 - **Freezing all parameters except mlp layers in all encoder bolck and output layer** (MLP_head)
 
-- 50 Epoch with 256 batch_size
+- 80 Epoch with 64 batch_size
 
-- Optimizer: SGD(weight_decay=0.0001)
+- Optimizer: SGD(Momentun=0.9, weight_decay=0.0001)
 
-- Cosine decay learning rate
+- lr: 5e-2(cosine decay)
+
+
 
 ### Download model weights
 
