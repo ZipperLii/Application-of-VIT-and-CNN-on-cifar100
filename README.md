@@ -50,39 +50,37 @@ In this task, we deploy ViT-B/16 locally and load [pre-trained weights](https://
 
 ### Params and Configuration
 
-##### 1. ViT-B16 fine-tuned on CIFAR-100
-
 - Structure configuration
 
 | Hyperparams | patch_size | hidden_size | MLP<br>dim | Head<br>num | layer_num<br>(EncoderBlk) | Attention<br>Dropout | MLP<br>Dropout |
 |:-----------:|:----------:|:-----------:|:----------:|:-----------:|:-------------------------:|:--------------------:|:--------------:|
 | **Value**   | 16×16      | 768         | 3072       | 12          | 12                        | 0.0                  | 0.1            |
 
-- Change the out dimension of MLP_head for classification to be 100
+- Change the out dimension of MLP_head to be 100 for classification
 
-- Freezing all parameters before output layer(MLP_head)
+#### 1. Feature extraction (fine-tuning mlp_head)
 
-- 100 Epoch with 512 batch_size
+- **Freezing all parameters except output layer** (MLP_head)
 
-- Optimizer: Adam(weight_decay=0.0001)
+- 50 Epoch with 256 batch_size
 
-##### 2. ViT-B16 with pre-trained weights (fine-tuning on CIFAR-100)
+- Optimizer: SGD(weight_decay=0.0001)
 
-- Configuration
+- Cosine decay learning rate
 
-| Hyperparams               | Value |
-|:-------------------------:|:-----:|
-| patch_size                | 16×16 |
-| hidden_size               | 768   |
-| mlp_dim                   | 3072  |
-| head_num                  | 12    |
-| layer_num<br>(EncoderBlk) | 12    |
-| attention_dropout         | 0.0   |
-| fc_dropout                | 0.1   |
+##### Result
 
-- pre-trained weights: pre-trained on Image-Net 21k (released by Google)
 
-- 
+
+##### 2. Layer fine-tuning (unfreeze mlp layers and mlp_head)
+
+- **Freezing all parameters except mlp layers in all encoder bolck and output layer** (MLP_head)
+
+- 50 Epoch with 256 batch_size
+
+- Optimizer: SGD(weight_decay=0.0001)
+
+- Cosine decay learning rate
 
 ### Download model weights
 
