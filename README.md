@@ -25,6 +25,12 @@ $ git clone https://github.com/ZipperLii/ViT-B16-on-CIFAR100
 
 ## Fine-tuning ViT-B/16 on CIFAR-100
 
+### ViT Structure
+
+Based on Transformer, images are divided into patches by filters and then flattend before embedding. After positional embedding, the model can recognize positional and various kinds of information between patches by multi-head self-attention mechanism.
+
+<img title="" src="img/VIT.png" alt="VIT" width="835" data-align="inline">
+
 ### Dataset
 
 [CIFAR-10 and CIFAR-100](https://www.cs.toronto.edu/~kriz/cifar.html)
@@ -36,7 +42,7 @@ I have tried to train ViT-B16 on CIFAR-10 from the ground up, but the performanc
 - 50 epochs with SGD(Momentum=0.9) → 0.6327 acc on test set
 - 60 epoch with Adam(L2-Regularization) → overfitting occurring after 20 epoch
 
-It seems  hard to train on CIFAR dataset from the ground up. The structure of ViT is more complex than other effective CNNs. It is easier for ViT to be overfitted on datasets of small scale, which verified the outcomes of [2010.119290(arxiv)](https://arxiv.org/pdf/2010.11929).
+It seems  hard to train on CIFAR dataset from the ground up. The structure of ViT is more complex than other effective CNNs. So, it is easier for ViT to be overfitted on datasets of small scale like CIFAR-10 and CIFAR-100. It verified the outcomes of [2010.119290(arxiv)](https://arxiv.org/pdf/2010.11929).
 
 ### Pre-trained Model
 
@@ -76,7 +82,7 @@ In this task, we deploy ViT-B/16 locally and load [pre-trained weights](https://
 
 - It shows that the pre-trained model already have the capacity of capturing quantitative features even though we just rectified the output head
 
-<img title="" src="img/Fine-tuned-head-epoch50.jpg" alt="fig.2][Fine-tuning-of-ViT-B16-on-CIFAR-10-and-CIFAR-100/img/Fine-tuned-head-epoch50.jpg at main · ZipperLii/Fine-tuning-of-ViT-B16-on-CIFAR-10-and-CIFAR-100 · GitHub" width="452" data-align="center">
+<img title="" src="img/Fine-tuned-head-epoch50.jpg" alt="fig.2][Fine-tuning-of-ViT-B16-on-CIFAR-10-and-CIFAR-100/img/Fine-tuned-head-epoch50.jpg at main · ZipperLii/Fine-tuning-of-ViT-B16-on-CIFAR-10-and-CIFAR-100 · GitHub" width="452" data-align="inline">
 
 #### 2. Layer fine-tuning (unfreeze mlp layers and mlp_head)
 
@@ -92,17 +98,19 @@ In this task, we deploy ViT-B/16 locally and load [pre-trained weights](https://
 
 - ### Results
 
-| dataset   | model                   | top1<br>acc | epoch<br> | epoch<br> | batch_size | weight<br>decay |
-|:---------:|:-----------------------:|:-----------:|:---------:|:---------:|:----------:| --------------- |
-| cifar-100 | ViT-B16<br>(pretrained) |             | 60        | -         | 32         | 0.0001          |
-| cifar-100 | ViT-B16                 |             |           |           |            |                 |
-| cifar-100 | ResNet-50               |             |           |           |            |                 |
+| dataset   | model                                     | top1<br>acc | epoch<br> | batch_size | weight<br>decay |
+|:---------:|:-----------------------------------------:|:-----------:|:---------:|:----------:| --------------- |
+| cifar-100 | ViT-B16<br>(fine-tuned   <br> mlp head)   | 0.7266      | 50        | 256        | 0.0001          |
+| cifar-100 | ViT-B16<br>(fine-tuned   <br> mlp layers) |             |           |            |                 |
+| cifar-100 | ViT-B16<br>(FFT)                          |             |           |            |                 |
 
 ### Reference
 
 1. [KingDomDom/ViT-CIFAR100-python](https://github.com/KingDomDom/ViT-CIFAR100-python)
 
-2. 
+2. [ra1ph2/Vision-Transformer](https://github.com/ra1ph2/Vision-Transformer?tab=readme-ov-file)
+
+3. 
 
 ### Author
 
