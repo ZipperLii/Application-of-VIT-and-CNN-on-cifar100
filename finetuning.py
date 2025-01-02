@@ -6,7 +6,7 @@ from torchvision import transforms
 from config.ViT_config import ViT_Config
 from utils.train_utils import train_model, save_model, try_gpu
 
-def data_loader(batch_size, train_trans, test_trans, data_path):
+def data_loader(batch_size, train_trans, test_trans, data_path, shuffle=True):
     train_dataset = torchvision.datasets.CIFAR100(
         data_path,
         True,
@@ -19,8 +19,8 @@ def data_loader(batch_size, train_trans, test_trans, data_path):
         test_trans,
         download=True
     )
-    train_iter = data.DataLoader(train_dataset, batch_size, shuffle=True)
-    test_iter = data.DataLoader(test_dataset, batch_size, shuffle=True)
+    train_iter = data.DataLoader(train_dataset, batch_size, shuffle=shuffle)
+    test_iter = data.DataLoader(test_dataset, batch_size, shuffle=shuffle)
     return train_iter, test_iter
 
 def main():
@@ -41,7 +41,7 @@ def main():
         transforms.Normalize(mean=[0.5071, 0.4867, 0.4408], std=[0.2675, 0.2565, 0.2761])
     ])
     
-    batch_size = 512
+    batch_size = 32
     train_iter, test_iter = data_loader(batch_size,
                                         trans1,
                                         trans2,
@@ -54,34 +54,35 @@ def main():
                               load_head=False)
     model.load_weights(np.load('./checkpoints/ViT-B_16.npz'))
     
-    # freeze parameters
-    for param in model.parameters():
-        param.requires_grad = False
+    # # freeze parameters
+    # for param in model.parameters():
+    #     param.requires_grad = False
     
-    # unfreeze head and mlp layers in encoder
-    model.mlp_head.weight.requires_grad = True
-    model.mlp_head.bias.requires_grad = True
-    for i, layer in enumerate(model.feature_layer.encoder_layer):
-        layer.mlp_norm.weight.requires_grad = True
-        layer.mlp_norm.bias.requires_grad = True
-        layer.mlp.fc1.weight.requires_grad = True
-        layer.mlp.fc1.bias.requires_grad = True
-        layer.mlp.fc2.weight.requires_grad = True
-        layer.mlp.fc2.bias.requires_grad = True
+    # # unfreeze head
+    # model.mlp_head.weight.requires_grad = True
+    # model.mlp_head.bias.requires_grad = True
+    # # unfreeze mlp layers in encoder
+    # for i, layer in enumerate(model.feature_layer.encoder_layer):
+    #     layer.mlp_norm.weight.requires_grad = True
+    #     layer.mlp_norm.bias.requires_grad = True
+    #     layer.mlp.fc1.weight.requires_grad = True
+    #     layer.mlp.fc1.bias.requires_grad = True
+    #     layer.mlp.fc2.weight.requires_grad = True
+    #     layer.mlp.fc2.bias.requires_grad = True
     
-    num_epochs = 100
+    num_epochs = 30
     
     train_model(net=model,
             train_iter=train_iter,
             test_iter=test_iter,
             num_epochs=num_epochs,
-            lr=1e-1,
+            lr=1e-2,
             device=try_gpu(),
             test=True,
             plot=True)
     
     # save model weights
-    model_weights = 'ViT-b16-CIFAR100-Epoch100-Finetuned-mlp'
+    model_weights = 'ViT-b16-CIFAR100-Epoch30-FFT'
     datasets_name = 'CIFAR-100'
     PATH = f'./checkpoints/{datasets_name}/{model_weights}.pth'
     save_model(model, PATH)

@@ -114,7 +114,7 @@ class EncoderBlock(nn.Module):
         self.hidden_size = config.hidden_size
         self.attn_norm = nn.LayerNorm(config.hidden_size, eps=1e-6)
         self.mlp_norm = nn.LayerNorm(config.hidden_size, eps=1e-6)
-        self.selfattention = SelfAttention(config, vis)
+        self.selfattention = SelfAttention(config, self.vis)
         self.mlp = MLP(config)
 
     def forward(self, embed_state):
@@ -192,7 +192,7 @@ class TransformerEndocer(nn.Module):
         self.layer_num = config.transformer.layer_num
         self.encoder_layer = nn.ModuleList()
         for _ in range(self.layer_num):
-            layer = EncoderBlock(config, vis)
+            layer = EncoderBlock(config, self.vis)
             self.encoder_layer.append(copy.deepcopy(layer))
 
     def forward(self, hidden_state):
@@ -202,7 +202,6 @@ class TransformerEndocer(nn.Module):
             if self.vis:
                 attn_weights.append(weight)
         output = self.encoder_norm(hidden_state)
-
         return output, attn_weights
 
 
@@ -248,10 +247,11 @@ class VisionTransformer(nn.Module):
     def __init__(self, config, load_head=True, vis=False):
         super(VisionTransformer, self).__init__()
         self.load_head = load_head
+        self.vis = vis
         self.img_size2d = config.input_size[1:]
         self.img_channel = config.input_size[0]
         self.embedding_layer = Embedding(config, self.img_size2d, self.img_channel)
-        self.feature_layer = TransformerEndocer(config, vis)
+        self.feature_layer = TransformerEndocer(config, self.vis)
         self.mlp_head = nn.Linear(config.hidden_size, config.num_classes)
     
     def load_weights(self, weights):

@@ -15,6 +15,7 @@ def evaluation(net, data_iter, device):
     if isinstance(net, nn.Module):
         net.eval()
         net.to(device)
+    print(f"evaluation on: {device}")
     metric = [0.0] * 3
     with torch.no_grad():
         for X, y in tqdm(data_iter, desc="Testing Progress", leave=True):
