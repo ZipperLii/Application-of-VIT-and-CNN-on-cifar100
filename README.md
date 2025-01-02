@@ -118,7 +118,7 @@ The original images are in the upper row with groundtruth. The attention maps ar
 
 The high value of greyscale(lighter) means that the model paied more attention to this region.
 
-<img title="" src="file:///F:/Works/GitHub%20Project/Fine-tuning-of-ViT-B16-on-CIFAR-10-and-CIFAR-100/img/Attention_map.png" alt="" width="679">
+![](.\img\Attention_map.png)
 
 ### Download model weights
 
