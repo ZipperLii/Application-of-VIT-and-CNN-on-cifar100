@@ -19,7 +19,7 @@ $ git clone https://github.com/ZipperLii/ViT-B16-on-CIFAR100
 
 - **Vision Transformer architecture** implemented *from scratch* which includes Multihead Self-Attention, MLP, EncoderBlock and MLP Head(classification) module.
 
-- **Fine-tuning model** by *feature extraction* and *full Fine-tuning* on CIFAR-10 and CIFAR-100 dataset.
+- **Fine-tuning model** by Feature Extraction, Parameter Efficient Fine-Tuning(PEFT) and Full Fine-Tuning(FFT) on CIFAR-100.
 
 - **Process Visualization** including *Attention Map*, *Positional Embedding* and *Patch Embedding filters*.
 
@@ -33,7 +33,7 @@ Based on Transformer, images are divided into patches by filters and then flatte
 
 ### Dataset
 
-[CIFAR-10 and CIFAR-100](https://www.cs.toronto.edu/~kriz/cifar.html)
+[CIFAR-100](https://www.cs.toronto.edu/~kriz/cifar.html)
 
 These two datasets contain 50000 images for training and 10000 for testing respectively.
 
@@ -64,7 +64,7 @@ In this task, we deploy ViT-B/16 locally and load [pre-trained weights](https://
 
 - Change the out dimension of MLP_head to be 100 for classification
 
-#### 1. Feature extraction (fine-tuning mlp_head)
+#### 1. Feature Extraction (fine-tuning mlp_head)
 
 - **Freezing all parameters except output layer** (MLP_head)
 
@@ -84,7 +84,7 @@ In this task, we deploy ViT-B/16 locally and load [pre-trained weights](https://
 
 <img title="" src="img/Fine-tuned-head-epoch50.jpg" alt="fig.2][Fine-tuning-of-ViT-B16-on-CIFAR-10-and-CIFAR-100/img/Fine-tuned-head-epoch50.jpg at main · ZipperLii/Fine-tuning-of-ViT-B16-on-CIFAR-10-and-CIFAR-100 · GitHub" width="475" data-align="inline">
 
-#### 2. Layer fine-tuning (unfreeze mlp layers and mlp_head)
+#### 2. PEFT (unfreeze mlp layers and mlp_head)
 
 - **Freezing all parameters except mlp layers in all encoder bolck and output layer** (MLP_head)
 
@@ -102,7 +102,7 @@ In this task, we deploy ViT-B/16 locally and load [pre-trained weights](https://
 
 <img title="" src="img/ViT-b16-CIFAR100-Epoch20-Finetuned-mlp.jpg" alt="" width="470">
 
-#### 3. Full fine-tuning
+#### 3. Full Fine-Tuning
 
 - 20 Epoch with 64 batch_size
 
@@ -122,17 +122,17 @@ The high value of greyscale(lighter) means that the model paied more attention t
 
 ### Download model weights
 
-- [HEAD-FT-acc0.7726-Epoch50](https://connecthkuhk-my.sharepoint.com/:f:/g/personal/u3637438_connect_hku_hk/EoDb8JWfCxFOh-e9ffIE_9MB2aZUTA4t8Ml3JMNwSJe73g?e=4RKzMg)
+- [HEAD-PEFT-acc0.7726-Epoch50](https://connecthkuhk-my.sharepoint.com/:f:/g/personal/u3637438_connect_hku_hk/EoDb8JWfCxFOh-e9ffIE_9MB2aZUTA4t8Ml3JMNwSJe73g?e=4RKzMg)
 
-- [MLP-FT-acc0.9248-Epoch20](https://connecthkuhk-my.sharepoint.com/:f:/g/personal/u3637438_connect_hku_hk/EoDb8JWfCxFOh-e9ffIE_9MB2aZUTA4t8Ml3JMNwSJe73g?e=4RKzMg)
+- [MLP-PEFT-acc0.9248-Epoch20](https://connecthkuhk-my.sharepoint.com/:f:/g/personal/u3637438_connect_hku_hk/EoDb8JWfCxFOh-e9ffIE_9MB2aZUTA4t8Ml3JMNwSJe73g?e=4RKzMg)
 
 - ### Results
 
-| dataset   | model                                     | top1<br>acc | epoch<br> | batch_size | weight<br>decay |
-|:---------:|:-----------------------------------------:|:-----------:|:---------:|:----------:| --------------- |
-| cifar-100 | ViT-B16<br>(fine-tuned   <br> mlp head)   | 0.7266      | 50        | 256        | 0.0001          |
-| cifar-100 | ViT-B16<br>(fine-tuned   <br> mlp layers) | 0.9248      | 20        | 64         | 0.0001          |
-| cifar-100 | ViT-B16<br>(FFT)                          |             |           |            |                 |
+| dataset   | model                              | top1<br>acc | epoch<br> | batch_size | weight<br>decay |
+|:---------:|:----------------------------------:|:-----------:|:---------:|:----------:| --------------- |
+| cifar-100 | ViT-B16<br>(Feature<br>Extraction) | 0.7266      | 50        | 256        | 0.0001          |
+| cifar-100 | ViT-B16<br>(PEFT)                  | 0.9248      | 20        | 64         | 0.0001          |
+| cifar-100 | ViT-B16<br>(FFT)                   |             |           |            |                 |
 
 ### Reference
 

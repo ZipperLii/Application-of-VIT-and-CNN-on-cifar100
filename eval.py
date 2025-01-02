@@ -1,6 +1,5 @@
 import torch
 import torchvision
-import numpy as np
 from models.ViT_B16 import VisionTransformer
 from torch.utils import data
 from torchvision import transforms

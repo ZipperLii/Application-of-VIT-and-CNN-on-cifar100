@@ -7,30 +7,7 @@ from torchvision import transforms
 from finetuning import data_loader
 from config.ViT_config import ViT_Config
 from models.ViT_B16 import VisionTransformer
-
-def CIFAR100_Num2Class(index_tensor):
-    cifar100_classes = [
-        'apple', 'aquarium_fish', 'baby', 'bear', 'beaver', 'bed', 'bee', 'beetle', 'bicycle', 'bottle',
-        'bowl', 'boy', 'bridge', 'bus', 'butterfly', 'camel', 'can', 'castle', 'caterpillar', 'cattle',
-        'chair', 'chimpanzee', 'clock', 'cloud', 'cockroach', 'couch', 'crab', 'crocodile', 'cup', 'dinosaur',
-        'dolphin', 'elephant', 'flatfish', 'forest', 'fox', 'girl', 'hamster', 'house', 'kangaroo', 'keyboard',
-        'lamp', 'lawn_mower', 'leopard', 'lion', 'lizard', 'lobster', 'man', 'maple_tree', 'motorcycle', 'mountain',
-        'mouse', 'mushroom', 'oak_tree', 'orange', 'orchid', 'otter', 'palm_tree', 'pear', 'pickup_truck', 'pine_tree',
-        'plain', 'plate', 'poppy', 'porcupine', 'possum', 'rabbit', 'raccoon', 'ray', 'road', 'rocket',
-        'rose', 'sea', 'seal', 'shark', 'shrew', 'skunk', 'skyscraper', 'snail', 'snake', 'spider',
-        'squirrel', 'streetcar', 'sunflower', 'sweet_pepper', 'table', 'tank', 'telephone', 'television', 'tiger', 'tractor',
-        'train', 'trout', 'tulip', 'turtle', 'wardrobe', 'whale', 'willow_tree', 'wolf', 'woman', 'worm'
-    ]
-    
-    if not isinstance(index_tensor, torch.Tensor):
-        raise ValueError("Input must be a tensor")
-    
-    index = index_tensor.item()
-    
-    if index < 0 or index >= len(cifar100_classes):
-        raise ValueError("Index out of range for CIFAR-100 classes")
-    
-    return cifar100_classes[index]
+from utils.evaluation_utils import CIFAR100_Num2Class
 
 def draw_attn_map(img, model):
     # plugging in another dimension as attn layer

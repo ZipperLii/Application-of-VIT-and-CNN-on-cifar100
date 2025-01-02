@@ -21,7 +21,6 @@ def np2th(weights):
         weights = weights.transpose([3, 2, 0, 1])
     return torch.from_numpy(weights)
 
-
 class SelfAttention(nn.Module):
     def __init__(self, config, vis):
         super(SelfAttention, self).__init__()
