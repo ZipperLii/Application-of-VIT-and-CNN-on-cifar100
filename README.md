@@ -118,7 +118,7 @@ The original images are in the upper row with groundtruth. The attention maps ar
 
 The high value of greyscale(lighter) means that the model paied more attention to this region.
 
-<img title="" src=".\img\Attention_map.png" alt="" data-align="inline" width="616">
+<img title="" src=".\img\AttentionMap samples/Attention_map1.png" alt="" data-align="inline" width="672">
 
 ### Download model weights
 

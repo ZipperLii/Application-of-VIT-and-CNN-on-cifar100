@@ -3,7 +3,6 @@ import cv2
 import torchvision
 import numpy as np
 import matplotlib.pyplot as plt
-from PIL import Image
 from torchvision import transforms
 from finetuning import data_loader
 from config.ViT_config import ViT_Config
@@ -87,12 +86,14 @@ def img_std(img, destandardize=False):
     return img
     
 def attnmap_show(image_list, ncols=5):
-    fig, axes = plt.subplots(2, ncols, figsize=(15, 6))
+    fig, axes = plt.subplots(2, ncols, figsize=(15, 9))
     for j in range(ncols):
         for i in range(2):
             npimg = image_list[i][j][0]
             axes[i, j].imshow(npimg, cmap='viridis')
-            axes[i, j].set_title(f"{image_list[i][j][1]}")
+            axes[i, j].set_title(f"{image_list[i][j][1]}", fontsize=16)
+            axes[i, j].axis('off')
+            
     plt.tight_layout()
     plt.show()
 
@@ -103,7 +104,7 @@ def main():
         transforms.Resize((224, 224))
         # transforms.Normalize(mean=[0.5071, 0.4867, 0.4408], std=[0.2675, 0.2565, 0.2761])
     ])
-    batch_size = 5
+    batch_size = 4
     _, test_iter = data_loader(batch_size,
                                         trans,
                                         trans,
@@ -128,7 +129,7 @@ def main():
         prediction = CIFAR100_Num2Class(pred)
         image_list[1].append([attn_map, f'Prediction: {prediction}'])
     
-    attnmap_show(image_list)
+    attnmap_show(image_list, 4)
     
 if __name__ == '__main__':
     main()
