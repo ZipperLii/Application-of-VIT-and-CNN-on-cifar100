@@ -4,7 +4,7 @@ import torchvision
 import numpy as np
 import matplotlib.pyplot as plt
 from torchvision import transforms
-from finetuning import data_loader
+from train import data_loader
 from config.ViT_config import ViT_Config
 from models.ViT_B16 import VisionTransformer
 from utils.evaluation_utils import CIFAR100_Num2Class

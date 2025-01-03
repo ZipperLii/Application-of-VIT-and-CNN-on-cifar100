@@ -78,7 +78,7 @@ def plot_curves(epoch_train_loss, epoch_train_acc, epoch_test_acc, path='./img/F
     
 def train_model(net, train_iter, test_iter, num_epochs, lr, device, test=False, plot=False):
     # initialize weights
-    net.apply(init_weights)
+    # net.apply(init_weights)
     # train on gpu?
     print('Training on', device)
     net.to(device)

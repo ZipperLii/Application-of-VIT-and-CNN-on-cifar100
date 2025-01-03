@@ -19,7 +19,7 @@ $ git clone https://github.com/ZipperLii/ViT-B16-on-CIFAR100
 
 - **Vision Transformer architecture** implemented *from scratch* which includes Multihead Self-Attention, MLP, EncoderBlock and MLP Head(classification) module.
 
-- **Fine-tuning model** by Feature Extraction, Parameter Efficient Fine-Tuning(PEFT) and Full Fine-Tuning(FFT) on CIFAR-100.
+- **Fine-tuning model** by Feature Abstraction, Parameter Efficient Fine-Tuning(PEFT) and Full Fine-Tuning(FFT) on CIFAR-100.
 
 - **Process Visualization** including *Attention Map*, *Positional Embedding* and *Patch Embedding filters*.
 
@@ -64,7 +64,7 @@ In this task, we deploy ViT-B/16 locally and load [pre-trained weights](https://
 
 - Change the out dimension of MLP_head to be 100 for classification
 
-#### 1. Feature Extraction (fine-tuning mlp_head)
+#### 1. Feature Abstraction (fine-tuning mlp_head)
 
 - **Freezing all parameters except output layer** (MLP_head)
 
@@ -100,7 +100,7 @@ In this task, we deploy ViT-B/16 locally and load [pre-trained weights](https://
 - By fine-tuning mlp head and all mlp layers of encoder, the accuracy increased 0.1522.
 - The transfer performance(top1 acc) is slightly better than the outcome of [2010.119290](https://arxiv.org/pdf/2010.11929) by SGD with 0.9 momentum and cosine decay learning rate.
 
-<img title="" src="img/ViT-b16-CIFAR100-Epoch20-Finetuned-mlp.jpg" alt="" width="470">
+<img title="" src="img/ViT-b16-CIFAR100-Epoch20-Finetuned-mlp.jpg" alt="" width="473">
 
 #### 3. Full Fine-Tuning
 
@@ -110,9 +110,24 @@ In this task, we deploy ViT-B/16 locally and load [pre-trained weights](https://
 
 - lr: 1e-2(cosine decay)
 
+##### Result＆Analysis
+
+- Test Accuracy = 0.6691
+- By FFT, I finally got a high training accuracy but acc=0.6691 on test set. The model overfit due to its higher complexity than CNNs on CIFAR-100.
+
+<img title="" src="img/ViT-b16-CIFAR100-Epoch50-FFT.jpg" alt="" width="487">
+
+#### Conclusion
+
+According to the three fine-tuning experiment, it is optimal to fine-tune mlp layers and mlp head. CIFAR-100 has much less amount of images than ImageNet, which poses the overfitting of ViT. So, FFT may be not the best fine-tuning choice. Even I ever tried to freeze other layers to only adjust the attention layers of encoder blocks based on the second outcome(PEFT-ViT with acc=0.9248), it is hard to make any improvement.
+
+There are some possibly potential improvement to further explore, such as applying different fine-tuning policy among 12 encoder layers of Transformer, adding some simple CNNs to abstract more detailed features before patch embedding and fine-tuning layer by layer....
+
 ### Visiualization
 
 #### 1. Attention Map
+
+By abstracting 12 attention weights of 12 Transformer block and processing them(more details in [attention_map.py](attention_map.py)), we can get the attention map.
 
 The original images are in the upper row with groundtruth. The attention maps are in the lower row which predict how the regions weight.
 
@@ -120,27 +135,41 @@ The high value of greyscale(lighter) means that the model paied more attention t
 
 <img title="" src=".\img\AttentionMap samples/Attention_map1.png" alt="" data-align="inline" width="672">
 
+#### 2. Patch Embedding
+
+<img src="img/Patch%20Filters.jpg" title="" alt="" width="718">
+
+According to the map of principal filters of PEFT and FFT model, the patch embedding layer of FFT model can hardly be trained due to the depth of model.
+
+By freezeing pre-trained model's embedding layer, we can effectively make use of it to abstract and embed features.
+
+#### 3. Patch Embedding
+
+The Cosine Similarity Matrix of learnable Position Embeddings denotes clear locality pattern as every 14th value is highly correlated as the patch size (16) divides the image (224x224) into a 14x14 matrix.
+
+<img title="" src="img/Positional%20Encoding.jpg" alt="" width="440">
+
 ### Download model weights
 
 - [HEAD-PEFT-acc0.7726-Epoch50](https://connecthkuhk-my.sharepoint.com/:f:/g/personal/u3637438_connect_hku_hk/EoDb8JWfCxFOh-e9ffIE_9MB2aZUTA4t8Ml3JMNwSJe73g?e=4RKzMg)
 
 - [MLP-PEFT-acc0.9248-Epoch20](https://connecthkuhk-my.sharepoint.com/:f:/g/personal/u3637438_connect_hku_hk/EoDb8JWfCxFOh-e9ffIE_9MB2aZUTA4t8Ml3JMNwSJe73g?e=4RKzMg)
 
+- [FFT-acc0.6691-Epoch50](https://connecthkuhk-my.sharepoint.com/:f:/g/personal/u3637438_connect_hku_hk/EoDb8JWfCxFOh-e9ffIE_9MB2aZUTA4t8Ml3JMNwSJe73g?e=4RKzMg)
+
 - ### Results
 
-| dataset   | model                              | top1<br>acc | epoch<br> | batch_size | weight<br>decay |
-|:---------:|:----------------------------------:|:-----------:|:---------:|:----------:| --------------- |
-| cifar-100 | ViT-B16<br>(Feature<br>Extraction) | 0.7266      | 50        | 256        | 0.0001          |
-| cifar-100 | ViT-B16<br>(PEFT)                  | 0.9248      | 20        | 64         | 0.0001          |
-| cifar-100 | ViT-B16<br>(FFT)                   |             |           |            |                 |
+| dataset   | model                               | top1<br>acc | epoch<br> | batch_size | weight<br>decay |
+|:---------:|:-----------------------------------:|:-----------:|:---------:|:----------:| --------------- |
+| cifar-100 | ViT-B16<br>(Feature<br>Abstraction) | 0.7266      | 50        | 256        | 0.0001          |
+| cifar-100 | ViT-B16<br>(PEFT)                   | 0.9248      | 20        | 64         | 0.0001          |
+| cifar-100 | ViT-B16<br>(FFT)                    | 0.6691      | 50        | 32         | 0.0001          |
 
 ### Reference
 
 1. [KingDomDom/ViT-CIFAR100-python](https://github.com/KingDomDom/ViT-CIFAR100-python)
 
 2. [ra1ph2/Vision-Transformer](https://github.com/ra1ph2/Vision-Transformer?tab=readme-ov-file)
-
-3. 
 
 ### Author
 

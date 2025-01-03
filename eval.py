@@ -15,7 +15,7 @@ def main():
     vit_config = ViT_Config()
     test_model = VisionTransformer(vit_config, 
                               load_head=False)
-    MODEL_PATH = './checkpoints/CIFAR-100/ViT-b16-CIFAR100-Epoch100-Finetuned-mlp.pth'
+    MODEL_PATH = './checkpoints/CIFAR-100/ViT-b16-CIFAR100-Epoch50-FFT.pth'
     test_model.load_state_dict(torch.load(MODEL_PATH))
     # test_model.load_weights(np.load(MODEL_PATH))
     DATA_PATH = './data'
