@@ -12,7 +12,7 @@ Experiment Eviroument
 Download repository:
 
 ```bash
-$ git clone https://github.com/ZipperLii/ViT-B16-on-CIFAR100
+$ git clone https://github.com/ZipperLii/Fine-tuning-of-ViT-B16-on-CIFAR-100.git
 ```
 
 ## Implemented components
